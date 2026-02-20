@@ -1,0 +1,9 @@
+bare_jrnl copy.*
+bare_jrnl.*
+case_study_ieee_format.*
+report.*
+
+
+!case_study_ieee_format.tex
+!report.tex
+!bare_jrnl.tex
