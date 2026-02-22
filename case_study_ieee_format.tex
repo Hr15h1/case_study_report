@@ -431,16 +431,16 @@ A detailed study on the methods of pruning in deep architectures }
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-Pruning is the process of systematically removing parts from a model which do not contribute much to the overall performance. In deep learning, pruning is the process of removing redundant or less important connections from a neural network to reduce its size and computational requirements while maintaing its performance. Pruning is considered more surgical than other model compression techniques, such as quantization or distillation. Pruning can be applied in two ways - train-time pruning and post-training pruning, based on when the pruning is done. Train-time pruning involves pruning the model during training process whereas post-training pruning involves pruning 
+Pruning is the process of systematically removing parts from a model which do not contribute much to the overall performance. In deep learning, pruning is the process of removing redundant or less important connections from a neural network to reduce its size and computational requirements while maintaing its performance. Pruning is considered more surgical than other model compression techniques, such as quantization or distillation. Pruning can be applied in two ways - train-time pruning and post-training pruning, based on when the pruning is done. Train-time pruning involves pruning the model during training process whereas post-training pruning involves pruning the model after it has trained to convergence. SNOWS is a one-shot post training pruning algorithm, which aims at applying layer wise pruning in models taking into account deeper network representations. It uses a hessian free optimization to calculate the newton updates without storing or computing the whole hessian matrix. The SNOWS algorithm can also applied on top of any sparse mask created from other pruning methods. 
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
-\begin{IEEEkeywords}
-IEEE, IEEEtran, journal, \LaTeX, paper, template.
-\end{IEEEkeywords}
+% \begin{IEEEkeywords}
+% IEEE, IEEEtran, journal, \LaTeX, paper, template.
+% \end{IEEEkeywords}
 
 
-
+  
 
 
 
