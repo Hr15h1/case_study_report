@@ -1,23 +1,152 @@
-\documentclass[10pt, twocolumn, letterpaper]{article}
-\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
-\setlength{\marginparwidth}{2cm}
+\documentclass[14pt]{extreport}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{inconsolata}
+\usepackage{ragged2e}
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
 
-\title{
-		%\vspace{-1in} 	
-		\usefont{OT1}{bch}{b}{n}
-		\normalfont \normalsize \textsc{Case Study Report} \\ [18pt]
-		\huge Pruning in Deep Architectures
-A detailed study on the methods of pruning in deep architectures \\
-}\usepackage{authblk}
-\author[1]{Hrishikesh M Jayakrishnan}
 
-	\affil[1]{\small{Department of Computer Scienece, University of Kerala}}
+\geometry{
+    a4paper,
+    total={6.5in, 10in},
+}
+
+\titleformat{\chapter}[display]{\Large\bfseries}{\chaptername\ \thechapter}{1em}{\Large}
+
 
 \begin{document}
-\maketitle
-Hello
+	\pagenumbering{gobble}
+	\begin{center}
+		\LARGE {
+			\textbf{Pruning in Deep Architectures \\
+			A detailed study on the methods of pruning in deep architectures }
+			
+		}
+		\vspace{3.5em}
+		\small \textit{Submitted to the University of Kerala in partial fulfillment of the requirements for the completion of Third Semester MSc Computer Science (Artificial Intelligence)}
+
+		\vspace{11.5em}
+		\includegraphics[scale=1.35]{Logo_of_University_of_Kerala.png}
+		\vspace{7em}
+
+		\small{
+			BY\\
+			\textbf{Hrishikesh M Jayakrishnan}\\
+			\textbf{(97424607010)}\\
+			\textbf{Department of Computer Science}\\
+			\textbf{University of Kerala}\\
+			\textbf{Kariavattom, Thiruvananthapuram, Kerala - 695581}
+		}
+	\end{center}
+	\newpage
+	\begin{center}
+		\textbf{DEPARTMENT OF COMPUTER SCIENCE}\\
+		\textbf{UNIVERSITY OF KERALA}\\
+		\textbf{THIRUVANANTHAPURAM, KERALA, 695581}
+
+		\vspace{7em}
+		\includegraphics[scale=1.2]{Logo_of_University_of_Kerala.png}
+
+		\textbf{CERTIFICATE}
+		\vspace{3em}
+
+		\justifying
+			\noindent This is to certify that the case study and seminar entitled \textbf{Pruning in Deep Architectures: A detailed study on the methods of pruning in deep architectures}, is the bonafide record work done by \textbf{HRISHIKESH M JAYAKRISHNAN (97424607010)} in partial fulfillment of the requirements for the completion of \textbf{Third Semester M.Sc. Computer Science with specialization in Artificial Intelligence}, at the \textbf{Department of Computer Science, University of Kerala, Thiruvananthapuram.}
+
+	\end{center}
+
+	\vspace{5em}
+
+	\noindent
+	\begin{minipage}{6cm}
+		Internal Guide\\
+		\textbf{Dr Aji S}\\
+		Associate Professor\\
+		Department of Computer Science\\
+		University of Kerala\\
+	\end{minipage}
+	\hfill
+	\begin{minipage}{6cm}
+		\vspace{1em}
+		\textbf{Dr Aji S}\\
+		Head of the Department\\
+		Department of Computer Science\\
+		University of Kerala\\
+	\end{minipage}
+
+	\vspace{3em}
+	Date:
+
+	\newpage
+
+	\vspace*{5em}
+
+	\begin{center}
+		\noindent \Large \textbf{ACKNOWLEDGEMENT}\\
+	\end{center}
+	
+
+
+	\newpage
+
+	\vspace*{4.3em}
+	\begin{center}
+		\noindent \Large \textbf{DECLARATION}
+	\end{center}
+
+	\newpage
+
+	\chapter*{\begin{center}
+		ABSTRACT
+	\end{center}}
+	\begin{center}
+		\justifying{
+			Pruning is the process of removing redundant or less important connections from deep neural networks to reduce its size and computational requirements while maintaining its performance. Pruning is considered more surgical than other model compression techniques, such as quantization or distillation. Pruning can be applied in two ways - train-time pruning and post-training pruning, based on when the pruning is done. Train-time pruning involves pruning the model during training process whereas post-training pruning involves pruning the model after it has trained to convergence. This work presents a detailed study of SNOWS(Stochastic Newton Optimal Weight Surgeon), a one-shot post training pruning algorithm which aims at applying layer wise pruning in models taking into account deeper network representations. It uses a hessian free optimization to calculate the newton updates without storing or computing the whole hessian matrix. The SNOWS algorithm can also be applied on top of any sparse mask created from other pruning methods. This study analyzes the working of the SNOWS algorithm.
+		}
+	\end{center}
+
+	\newpage
+	\tableofcontents
+	
+	\newpage
+	\pagenumbering{arabic}
+	\setcounter{page}{1}
+	\chapter[Introduction]{Introduction}
+		Deep learning has revolutionized artificial intelligence, giving computers the ability to extract and learn complex patterns from data through the use of deep neural networks which consists of multiple hidden layers When it comes to understanding images, specific models—like Convolutional Neural Networks (CNNs) \cite{lecun1998gradient}, ResNets \cite{he2015resnet}, and the even more powerful Vision Transformers (ViTs)\cite{dosovitskiy2021vit}, are doing incredibly advanced work. 
+
+
+		To achieve state-of-the-art performances in various deep learning tasks, people go for building large models with many deep layers, that are capable of capturing very deep features from data. Such models contain more than 25-30 million parameters, and may require high storage and computational needs. Deploying such models in resource-constrained environments like edge devices, mobile platforms, etc is a challenging task.
+		
+		To address these challenges, different model compression techniques are used. These include quantization - a technique that reduces the precision of numerical values such as weights and activations of a model in order to make them faster\cite{web_01}, distillation - it is a technique mainly used for transfering a large pretrained "teacher model" to a smaller "student model"\cite{web_02}, pruning - it is the process of removing redundant or less important connections from deep neural networks to reduce its size and computational requirements while maintaining its performance. Pruning can be done either after training or before training a model. 
+
+		Some of the existing pruning algorithms use magnitude based pruning or layer wise pruning that preserve local weights only. Some methods may also require training the resulting pruned model to regain their lost accuracy. This report presents a detailed study of the SNOWS algorithm\cite{lucas2025preserving}. The SNOWS algorithm is a one-shot post-training pruning technique. It applied layer wise pruning while accounting for non-linear activations deep in the network. The algorithm also uses a Hessian-free optimization to compute exact Newton descent steps without needing to compute or store the full Hessian Matrix.
+
+	\newpage
+	\chapter[Problem Statement]{Problem Statement}
+		Modern deep neural networks contain more number of parameters,resulting in an increased demand for computational resources and increased challenges for deploying in resource constrained devices. To address this, various model pruning methods are used. Fine pruning\cite{BINGHAM2025101242} is one such algorithm which uses activation magnitudes to find and remove redundant nuerons. Another algorithm that introduces a training-dynamics aware pruning is WideTopo\cite{DENG2026108136} which uses Neural Tangent Kernel(NTK) trace estimation and saliency based scores to preserve structural stability while pruning. In large language models, algorithms like Wanda \cite{wanda} uses weight activation based 
+	\newpage
+	\chapter[Literature Review]{Literature Review}
+
+	\newpage
+	\chapter[Methodology]{Methodology}
+
+	\newpage
+	\chapter[Experiment Analysis]{Experiment Analysis}
+
+	\subsection[Dataset]{Dataset}
+	\subsection[Evaluation Metrics]{Evaluation Metrics}
+	\subsection[Quantitative Analysis]{Quantitative Analysis}
+	\subsection[Qualitative Analysis]{Qualitative Analysis}
+	\subsection[Result]{Result}
+
+	\newpage
+	\printbibliography
 \end{document}
