@@ -1,5 +1,6 @@
-\documentclass[12pt]{extreport}
+\documentclass[11pt]{extreport}
 \usepackage{geometry}
+\usepackage{ragged2e}
 \usepackage{titlesec}
 \usepackage{indentfirst}
 \usepackage{tikz}
@@ -14,15 +15,20 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{amsmath}
-\usepackage[backend=biber,style=numeric]{biblatex}
+\usepackage[backend=biber,style=apa]{biblatex}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[ddmmyyyy]{datetime}
+
 \addbibresource{references.bib}
 
 
 \geometry{
     a4paper,
-    total={6.5in, 10in},
+    total={6.5in, 10.4in},
 }
 
 \titleformat{\chapter}[display]{\Large\bfseries}{\chaptername\ \thechapter}{1em}{\Large}
@@ -31,22 +37,23 @@
 \begin{document}
 	\pagenumbering{gobble}
 	\begin{center}
-		\LARGE {
+		\huge {
 			\textbf{Pruning in Deep Architectures \\
 			A detailed study on the methods of pruning in deep architectures }
 			
 		}
-		\vspace{3.5em}
-		\small \textit{Submitted to the University of Kerala in partial fulfillment of the requirements for the completion of Third Semester MSc Computer Science (Artificial Intelligence)}
+		\vspace{6em}
+		\large \textit{Submitted to the University of Kerala in partial fulfillment of the requirements for the completion of Third Semester MSc Computer Science (Artificial Intelligence)}
 
-		\vspace{11.5em}
+		\vspace{9em}
 		\includegraphics[scale=1.35]{Logo_of_University_of_Kerala.png}
 		\vspace{7em}
 
-		\small{
+		\large{
 			BY\\
 			\textbf{Hrishikesh M Jayakrishnan}\\
 			\textbf{(97424607010)}\\
+			\vspace{4em}
 			\textbf{Department of Computer Science}\\
 			\textbf{University of Kerala}\\
 			\textbf{Kariavattom, Thiruvananthapuram, Kerala - 695581}
@@ -62,14 +69,14 @@
 		\includegraphics[scale=1.2]{Logo_of_University_of_Kerala.png}
 
 		\textbf{CERTIFICATE}
-		\vspace{3em}
+		\vspace{4em}
 
 		\justifying
 			\noindent This is to certify that the case study and seminar entitled \textbf{Pruning in Deep Architectures: A detailed study on the methods of pruning in deep architectures}, is the bonafide record work done by \textbf{HRISHIKESH M JAYAKRISHNAN (97424607010)} in partial fulfillment of the requirements for the completion of \textbf{Third Semester M.Sc. Computer Science with specialization in Artificial Intelligence}, at the \textbf{Department of Computer Science, University of Kerala, Thiruvananthapuram.}
 
 	\end{center}
 
-	\vspace{5em}
+	\vspace{6em}
 
 	\noindent
 	\begin{minipage}{6cm}
@@ -82,31 +89,54 @@
 	\hfill
 	\begin{minipage}{6cm}
 		\vspace{1em}
-		\textbf{Dr Aji S}\\
-		Head of the Department\\
-		Department of Computer Science\\
-		University of Kerala\\
+		\begin{flushright}
+			\textbf{Dr Aji S}\\
+			Head of the Department\\
+			Department of Computer Science\\
+			University of Kerala\\
+		\end{flushright}
 	\end{minipage}
 
 	\vspace{3em}
-	Date:
+	Date: \today
+
+
+	\chapter*{
+		\begin{center}
+			ACKNOWLEDGEMENT
+		\end{center}
+	}
+	\justifying \Large{
+		I would like to express my sincere and heartfelt thanks towards all those who have helped me in making this case study. 
+
+		I would like to thank my guide \textbf{Dr Aji S}, who is also the Head of the Department of Computer Science, for his valuable suggestions and vital encouragement. I would also like to extend my gratitude to my course coordinator \textbf{Dr Vidhya M}, for the timely advice and help. 
+
+		I also extend my heartfelt thanks to all \textbf{faculty members} of the department of computer science and to my \textbf{friends}. 
+	}
 
 	\newpage
 
-	\vspace*{5em}
+	\chapter*{
+		\begin{center}
+			DECLARATION
+		\end{center}
+	}
 
-	\begin{center}
-		\noindent \Large \textbf{ACKNOWLEDGEMENT}\\
-	\end{center}
-	
+	\justifying I hereby declare that this case study work titled “Pruning in Deep Architectures - A detailed study on the methods of pruning in deep architectures” is completed by me under the guidance of Dr. Aji S, Associate Professor and Head of the Department, Department of Computer Science, University of Kerala. I hereby declare that the entire report is my own, and not copied from any other work. I am also declaring that this report or any part of it is not submitted for assessment in University of Kerala or any other institution for the same purpose.
+
+	\vspace{5em}
+
+	\noindent
+	\begin{minipage}{6cm}
+		Place: Karyavattom\\
+		Date: \today
+	\end{minipage}
+	\hfill
+	\begin{minipage}{5.76cm}
+		\textbf{\large Hrishikesh M Jayakrishnan}
+	\end{minipage}
 
 
-	\newpage
-
-	\vspace*{4.3em}
-	\begin{center}
-		\noindent \Large \textbf{DECLARATION}
-	\end{center}
 
 	\newpage
 
@@ -126,41 +156,44 @@
 	\pagenumbering{arabic}
 	\setcounter{page}{1}
 	\chapter[Introduction]{Introduction}
-		Deep learning has revolutionized artificial intelligence, giving computers the ability to extract and learn complex patterns from data through the use of deep neural networks which consists of multiple hidden layers When it comes to understanding images, specific models—like Convolutional Neural Networks (CNNs) \cite{lecun1998gradient}, ResNets \cite{he2015resnet}, and the even more powerful Vision Transformers (ViTs)\cite{dosovitskiy2021vit}, are doing incredibly advanced work. 
+		Deep learning has revolutionized artificial intelligence, giving computers the ability to extract and learn complex patterns from data through the use of deep neural networks which consists of multiple hidden layers When it comes to understanding images, specific models—like Convolutional Neural Networks (CNNs) (\cite{lecun1998gradient}), ResNets (\cite{he2015resnet}), and the even more powerful Vision Transformers (ViTs) (\cite{dosovitskiy2021vit}), are doing incredibly advanced work. 
 
 
 		To achieve state-of-the-art performances in various deep learning tasks, people go for building large models with many deep layers, that are capable of capturing very deep features from data. Such models contain more than 25-30 million parameters, and may require high storage and computational needs. Deploying such models in resource-constrained environments like edge devices, mobile platforms, etc is a challenging task.
 		
-		To address these challenges, different model compression techniques are used. These include quantization - a technique that reduces the precision of numerical values such as weights and activations of a model in order to make them faster\cite{web_01}, distillation - it is a technique mainly used for transfering a large pretrained "teacher model" to a smaller "student model"\cite{web_02}, pruning - it is the process of removing redundant or less important connections from deep neural networks to reduce its size and computational requirements while maintaining its performance. Pruning can be done either after training or before training a model. 
+		To address these challenges, different model compression techniques are used. These include quantization - a technique that reduces the precision of numerical values such as weights and activations of a model in order to make them faster (\cite{web_01}), distillation - it is a technique mainly used for transfering a large pre-trained "teacher model" to a smaller "student model" (\cite{web_02}), pruning - it is the process of removing redundant or less important connections from deep neural networks to reduce its size and computational requirements while maintaining its performance. Pruning can be done either after training or before training a model. 
 
-		Some of the existing pruning algorithms use magnitude based pruning or layer wise pruning that preserve local weights only. Some methods may also require training the resulting pruned model to regain their lost accuracy. This report presents a detailed study of the SNOWS algorithm\cite{lucas2025preserving}. The SNOWS algorithm is a one-shot post-training pruning technique. It applied layer wise pruning while accounting for non-linear activations deep in the network. The algorithm also uses a Hessian-free optimization to compute exact Newton descent steps without needing to compute or store the full Hessian Matrix.
+		Some of the existing pruning algorithms use magnitude based pruning or layer wise pruning that preserve local weights only. Some methods may also require training the resulting pruned model to regain their lost accuracy. This report presents a detailed study of the SNOWS algorithm (\cite{lucas2025preserving}). The SNOWS algorithm is a one-shot post-training pruning technique. It applied layer wise pruning while accounting for non-linear activations deep in the network. The algorithm also uses a Hessian-free optimization to compute exact Newton descent steps without needing to compute or store the full Hessian Matrix.
 
 	\newpage
 	\chapter[Problem Statement]{Problem Statement}
-		Modern deep neural networks contain more number of parameters,resulting in an increased demand for computational resources and increased challenges for deploying in resource constrained devices. To address this, various model pruning methods are used. Fine pruning\cite{BINGHAM2025101242} is one such algorithm which uses activation magnitudes to find and remove redundant nuerons. Another algorithm that introduces a training-dynamics aware pruning is WideTopo\cite{DENG2026108136} which uses Neural Tangent Kernel(NTK) trace estimation and saliency based scores to preserve structural stability while pruning. In large language models, algorithms like Wanda \cite{wanda} uses weight activation based scoring to apply one shot pruning without retraining. 
+		Modern deep neural networks contain more number of parameters,resulting in an increased demand for computational resources and increased challenges for deploying in resource constrained devices. To address this, various model pruning methods are used. Fine pruning (\cite{BINGHAM2025101242}) is one such algorithm which uses activation magnitudes to find and remove redundant nuerons. Another algorithm that introduces a training-dynamics aware pruning is WideTopo (\cite{DENG2026108136}) which uses Neural Tangent Kernel(NTK) trace estimation and saliency based scores to preserve structural stability while pruning. In large language models, algorithms like Wanda (\cite{wanda}) uses weight activation based scoring to apply one shot pruning without retraining. Even though these algorithms can effectively prune a neural network, retraining the model is required at some point, for regaining the lost accuracy. Other existing approaches rely on neuron activation statistics, first order gradient information, layer wise pruning that do not consider the effects of a pruned layer on its succeeding layers. 
 		
-		Even though these algorithms can effectively prune a neural network, retraining the model is required at some point, for regaining the lost accuracy. Other existing approaches rely on neuron activation statistics, first order gradient information, layer wise pruning that do not consider the effects of a pruned layer on its succeeding layers.  
+		\vspace{1em}
+		Considering the limitations of the existing pruning algorithms, the problem addressed in this case study can be stated as follows:
+
+		\begin{quote}
+			\textit{To create an efficient pruning algorithm that reduces the size of deep neural networks while preserving their accuracy and performance on various tasks.}
+		\end{quote}
+
+
 	\newpage
 	\chapter[Literature Review]{Literature Review}
 
-	\citeauthor{11092769}\cite{11092769} has proposed a pruning algorithm that applies structured pruning and weight quantization during training of a neural network. The algorithm GETA \cite{11092769} uses three learnable parameters \(q_m, t, \text { and } d\) for calculating the optimal quantization bit-width for each layer. The algorithm then performs structured pruning using a proposed Quantization Aware Dependency Graph to handle complex branches added by quantization operations. The algorithm then employs a 4-stage QASSO or Quantization-Aware Structured Sparse Optimizer for pruning and quantization. The four stages include warm-up, finding feasible bit width using Partial Projected Stochastic Gradient, joint pruning and quantization and finally training the pruned and quantized model till convergence.
+	\cite{11092769} has proposed a pruning algorithm that applies structured pruning and weight quantization during training of a neural network. The algorithm GETA (\cite{11092769}) uses three learnable parameters \(q_m, t, \text { and } d\) for calculating the optimal quantization bit-width for each layer. The algorithm then performs structured pruning using a proposed Quantization Aware Dependency Graph to handle complex branches added by quantization operations. The algorithm then employs a 4-stage QASSO or Quantization-Aware Structured Sparse Optimizer for pruning and quantization. The four stages include warm-up, finding feasible bit width using Partial Projected Stochastic Gradient, joint pruning and quantization and finally training the pruned and quantized model till convergence.
 
-	Similarly, \citeauthor{DENG2026108136}\cite{DENG2026108136} has proposed another pruning algorithm that performs pruning during the training of a neural network. WideTopo \cite{DENG2026108136} is a foresight pruning technique that finds a small, high-performing sub-network within a larger network before training begins, using a binary mask. WideTopo calculates a combined saliency score for deciding which parameters are important, by giving an input batch of data to the model that has to be pruned. This combined saliency score is a weighted sum of the Neural Tangent Kernel (NTK) (measure of how much a parameter impacts the model's generalization) and the Implicit Target Alignment (ITA) (measure of how much a parameter affects the model's directional inductive bias). By multiplying a decay factor with the saliency score, the algorithm can prevent pruned models from being too narrow by exploring wider topologies during pruning. The model is not pruned once instead it is pruned and regrown for a set number of iterations, followed by a final pruning step to reach the target density.
+	Similarly, \cite{DENG2026108136} has proposed another pruning algorithm that performs pruning during the training of a neural network. WideTopo (\cite{DENG2026108136}) is a foresight pruning technique that finds a small, high-performing sub-network within a larger network before training begins, using a binary mask. WideTopo calculates a combined saliency score for deciding which parameters are important, by giving an input batch of data to the model that has to be pruned. This combined saliency score is a weighted sum of the Neural Tangent Kernel (NTK) (measure of how much a parameter impacts the model's generalization) and the Implicit Target Alignment (ITA) (measure of how much a parameter affects the model's directional inductive bias). By multiplying a decay factor with the saliency score, the algorithm can prevent pruned models from being too narrow by exploring wider topologies during pruning. The model is not pruned once instead it is pruned and regrown for a set number of iterations, followed by a final pruning step to reach the target density.
 
-	Another algorithm inspired by biological neural networks, called as Fine-pruning \cite{BINGHAM2025101242} is proposed by \citeauthor{BINGHAM2025101242}. Fine-pruning is a post training pruning algorithm which personalizes machine learning models for individual users while maintaining overall performance. The algorithm starts with a large pre-trained base model. A small amount of user-specific data called target data is collected. The algorithm then feeds the data one sample at a time using only forward passes, without backpropagation or gradient calculation. The activation maps of each layer are recorded, and the contribution of each individual weight is calculated by summing its activation values across all input samples. Weights that contribute the least to the output are pruned by setting them to zero.
-
-
-
-
+	Another algorithm inspired by biological neural networks, called as Fine-pruning is proposed by \citeauthor{BINGHAM2025101242}. Fine-pruning is a post training pruning algorithm which personalizes machine learning models for individual users while maintaining overall performance. The algorithm starts with a large pre-trained base model. A small amount of user-specific data called target data is collected. The algorithm then feeds the data one sample at a time using only forward passes, without backpropagation or gradient calculation. The activation maps of each layer are recorded, and the contribution of each individual weight is calculated by summing its activation values across all input samples. Weights that contribute the least to the output are pruned by setting them to zero.
 
 	\newpage
 	\chapter[Methodology]{Methodology}
 
-
-
 		The SNOWS\footnote{Stochastic Newton Weight Optimal Surgeon} algorithm is a one-shot, post-training pruning framework that accurately adjusts the values of a network's remaining weights (after a sparse mask is already applied) to recover performance without requiring expensive retraining. It accomplishes this by optimizing a new, more global reconstruction objective, while also considering the non-linear activations and other connections present deep within neural networks. This complex non-linear problem is then solved using a specialized Hessian-Free second order optimization method.
 
-		Consider a neural network with \(L\) layers. The function of this neural network can be represented as \(f(X^0, W)\), where \(W = (W^1, W^2, W^3, \ldots, W^L)\) is the collection of weight matrices upto \(L\) layers and \(X^0\) is the input data. For a layer \(\ell\), the output can be calculated as \(Y^{\ell} = f^{\ell}(X^{\ell},W^{\ell})\). If we consider a loss function that is twice differentiable, given the weight parameters \(W\), the gradient can be denoted as 
+		Consider a neural network with \(L\) layers. The function of this neural network can be represented as \(f(X^0, W)\), where 
+		
+		\noindent \(W = (W^1, W^2, W^3, \ldots, W^L)\) is the collection of weight matrices upto \(L\) layers and \(X^0\) is the input data. For a layer \(\ell\), the output can be calculated as \(Y^{\ell} = f^{\ell}(X^{\ell},W^{\ell})\). If we consider a loss function that is twice differentiable, given the weight parameters \(W\), the gradient can be denoted as 
 		
 		$$\nabla \mathcal{L}(W) = \frac{\partial \mathcal{L}}{\partial W} $$
 		
@@ -225,7 +258,7 @@
 
 		$$\delta_Z = -H_Z^{-1} \nabla\mathcal{L}(\widehat{W}_Z^l)$$
 
-		Calculating the inverse of the Hessian matrix $H_Z$ is computationally expensive and infeasible for large neural networks. To address this, SNOWS uses a Hessian-Free method to solve the equation without explicitly computing or storing the Hessian matrix. The authors use the conjugate gradient method \cite{ref1}
+		Calculating the inverse of the Hessian matrix $H_Z$ is computationally expensive and infeasible for large neural networks. To address this, SNOWS uses a Hessian-Free method to solve the equation without explicitly computing or storing the Hessian matrix. The authors use the conjugate gradient method (\cite{ref1})
 
 		We add a small dampening term $\lambda I$ to the Hessian matrix to ensure it is positive definite.
 		$$(H_Z + \lambda I) \delta_Z = -\nabla\mathcal{L}(\widehat{W}_Z^l)$$
@@ -240,30 +273,40 @@
 
 		Finally, the calculated update $\delta_Z$ is then used to adjust the remaining weights after pruning, which helps in recovering the performance of the pruned model without requiring retraining. 
 
-		The algorithm performs two types of pruning - unstructured pruning and semi-structured pruning. Unstructured pruning involves pruning individual weights in an unrestricted format, resulting in high compression of model. While semi-structured pruning use \(N:M\) sparsity, where every \(N\) neurons out of every \(M\) contiguous neurons are retained.
+		The algorithm performs two types of pruning - unstructured pruning and semi-structured pruning. Unstructured pruning involves pruning individual weights in an unrestricted format, resulting in high compression of model. While semi-structured pruning use \(N:M\) sparsity, where every \(N\) neurons out of every \(M\) contiguous neurons are retained. The SNOWS algorithm is applied on two pre-trained CNN (\cite{lecun1998gradient}) models. The first one is ResNet-20 pre-trained on the CIFAR-10 (\cite{cifar}) dataset, while the second one is ResNet-50 where three versions, pre-trained on the CIFAR-10, CIFAR-100 (\cite{cifar}) and ImageNet-1K (\cite{data_01}), are used
 		
 
 	\newpage
 	\chapter[Experiment Analysis]{Experiment Analysis}
 
-		\subsection[Models Used]{Models Used}
-
-		The SNOWS algorithm is applied on two models - ResNet20 and ResNet50. 
-
-
+		\subsection[Experiment Setup]{Experiment Setup}
+		The pruning is applied on the ResNet models using a single 16gb Nvidia RTX 5060ti GPU. 
 
 		\subsection[Dataset]{Dataset}
 
-		The 
+		Below are the datasets used for the purpose of pruning the models.
+		
+		\begin{enumerate}
+			\item CIFAR-10 (\cite{cifar}) - The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. The dataset is split into 50000 training images and 10000 test images.
+			\item CIFAR-100 ({\cite{cifar}}) - The CIFAR-100 dataset is similar to the CIFAR-10 dataset but contains 100 classes with 600 images each. This dataset is also split into 50000 training images and 10000 test images.
+			\item Mini-ImageNet 1K (\cite{data_01}) - This dataset is a mini version of the original ImageNet 1K dataset. It consists of 1000 classes of images with \(\sim37\) images in each class
+		\end{enumerate}
 
 		\subsection[Evaluation Metrics]{Evaluation Metrics}
+		Below are the evaluation metrics used for the study
+		\begin{enumerate}
+			\item Accuracy - The accuracy is measured by calculating the ratio of correct predictions to the total predictions made by the deep learning model.
+			\item Total Pruning Time - It is obtained by measuring the total wall-clock time required for pruning a deep learning model.
+		\end{enumerate}
+		\newpage
 		\subsection[Quantitative Analysis]{Quantitative Analysis}
+			The tables below shows the accuracies of the two models pre-trained on the CIFAR-10 (\cite{cifar}), CIFAR-100 (\cite{cifar}) and Mini-ImageNet 1K (\cite{data_01}). The results compare the accuracies of the base dense model with their pruned version, according to the various values of $K$ and sparsity levels. The results also include the pruning time taken for each model in unstructured pruning and semi-structured or \(N:M\) pruning.
 			\begin{table}[H]
 				\centering
 				\caption{Accuracy of models on N:M Pruning}
 				\begin{tabular}{lcccccc} 
 					\toprule
-					\multirow{3}{*}{K} & \multicolumn{2}{c}{ResNet20} & \multicolumn{2}{c}{Resnet50} & \multicolumn{2}{c}{Resnet50}   \\
+					\multirow{3}{*}{K} & \multicolumn{2}{c}{ResNet-20} & \multicolumn{2}{c}{Resnet50} & \multicolumn{2}{c}{Resnet50}   \\
 									& \multicolumn{2}{c}{CIFAR-10} & \multicolumn{2}{c}{CIFAR-10} & \multicolumn{2}{c}{CIFAR-100}  \\ 
 					\cmidrule{2-7}
 									& 1:4     & 2:4                & 1:4    & 2:4                 & 1:4     & 2:4                  \\ 
@@ -275,38 +318,26 @@
 					k = 40             & \textbf{84.55\%} & \textbf{91.7\%}  & \textbf{94.4\%} & 94.49\%             & \textbf{74.61\%} & \textbf{77.2\%}               \\
 					\bottomrule 
 				\end{tabular}
+				\label{table1}
 			\end{table}
+
+			Table \ref{table1} shows the results of \(N:M\) pruning on ResNet models. As the value of \(K\) increaseas, more number of activations are considered ahead of a layer that is being pruned, resulting in higher accuracy of the ResNet models.
 
 			\begin{table}[H]
 				\centering
 				\caption{Accuracy of models on Unstructured Pruning}
-				\begin{tabular}{lc} 
+				\begin{tabular}{lccc} 
 					\toprule
-					K = 40   & ResNet20 on CIFAR-10        \\ 
+					K = 40   & ResNet-20 on CIFAR-10 & ResNet-50 on CIFAR-10 & \multicolumn{1}{l}{ResNet-50 on CIFAR-100}        \\ 
 					\midrule
-					Sparsity & Base Accuracy = 92.59\% \\
+					Sparsity & Base Accuracy = 92.59\% & Base Accuracy = 94.64\% & \multicolumn{1}{l}{Base Accuracy = 77.41\%} \\
 					\midrule
-					0.5      & \textbf{92.63\%}                                  \\
-					0.6      & 91.54\%                                           \\
-					0.7      & 88.65\%                                           \\
+					0.5      & \textbf{92.63\%} & 94.36\% & \textbf{76.55\%}             \\
+					0.6      & 91.54\% & \textbf{94.5\%} & 76.19\%               \\
+					0.7      & 88.65\% & 94.46\% & 75.03\%                         \\
 					\bottomrule
 				\end{tabular}
-			\end{table}
-
-			\begin{table}[H]
-				\centering
-				\caption{Accuracy of models on Unstructured Pruning}
-				\begin{tabular}{lcc} 
-					\toprule
-							& ResNet50 on CIFAR-10 & \multicolumn{1}{l}{ResNet50 on CIFAR-100}\\ 
-					\midrule
-					Sparsity & Base Accuracy = 94.64\% & \multicolumn{1}{l}{Base Accuracy = 77.41\%}\\
-					\midrule
-					0.5      & 94.36\% & \textbf{76.55\%}                                    \\
-					0.6      & \textbf{94.5\%} & 76.19\%                                    \\
-					0.7      & 94.46\% & 75.03\%                                    \\
-					\bottomrule
-				\end{tabular}
+				\label{table2}
 			\end{table}
 
 			\begin{table}[H]
@@ -314,7 +345,7 @@
 				\caption{Accuracy of model Unstructured Pruning}
 				\begin{tabular}{lc} 
 					\toprule
-							& \begin{tabular}[c]{@{}c@{}}ResNet50 on ImageNet\\(K=2)\end{tabular}  \\ 
+							& \begin{tabular}[c]{@{}c@{}}ResNet-50 on ImageNet\\(K=2)\end{tabular}  \\ 
 					\midrule
 					Sparsity & Base Accuracy = 75.68\%      \\          
 					\midrule                              
@@ -323,15 +354,17 @@
 					0.7      & 58.22\%                                                              \\
 					\bottomrule
 				\end{tabular}
+				\label{table3}
 			\end{table}
 
+			Tables \ref{table2} and \ref{table3} showcase the accuracy obtained on ResNet-20 and ResNet-50, by applying unstructured pruning. Here, for increasing model sparsity, the resulting accuracy decreases because of the increase in amount of neurons that have zero weights.
 
 			\begin{table}[H]
 				\centering
-				\caption{1:4 Pruning - Pruning Time(in minutes)}
+				\caption{Total Pruning Time in minutes (1:4 Pruning)}
 				\begin{tabular}{lccc} 
 					\toprule
-					& ResNet20 on CIFAR-10 & ResNet50 on CIFAR-10 & \multicolumn{1}{l}{ResNet50 on CIFAR-100}  \\ 
+					& ResNet-20 on CIFAR-10 & ResNet-50 on CIFAR-10 & \multicolumn{1}{l}{ResNet-50 on CIFAR-100}  \\ 
 					\cmidrule{2-4}
 					K  & Time                 & Time                 & Time                                       \\ 
 					\midrule
@@ -340,16 +373,17 @@
 					40 & 24.2           & 16.9           & 35                                   \\
 					\bottomrule
 				\end{tabular}
+				\label{table4}
 			\end{table}
 
 
 
 			\begin{table}[H]
 				\centering
-				\caption{2:4 Pruning - Pruning Time(in minutes)}
+				\caption{Total Pruning Time in minutes (2:4 Pruning)}
 				\begin{tabular}{lccc} 
 					\toprule
-					& ResNet20 on CIFAR-10 & ResNet50 on CIFAR-10 & \multicolumn{1}{l}{ResNet50 on CIFAR-100}  \\ 
+					& ResNet-20 on CIFAR-10 & ResNet-50 on CIFAR-10 & \multicolumn{1}{l}{ResNet-50 on CIFAR-100}  \\ 
 					\cmidrule{2-4}
 					K  & Time                 & Time                 & Time                                       \\ 
 					\midrule
@@ -358,14 +392,15 @@
 					40 & 13.4           & 18.7           & 44.9                                \\
 					\bottomrule
 				\end{tabular}
+				\label{table5}
 			\end{table}
 
 			\begin{table}[H]
 				\centering
-				\caption{Unstructured Pruning with K = 40 - Pruning Time(in minutes)}
+				\caption{Total Pruning Time in minutes (Unstructured Pruning with \(K = 40\))}
 				\begin{tabular}{lccc} 
 					\toprule
-					& ResNet20 on CIFAR-10 & ResNet50 on CIFAR-10 & \multicolumn{1}{l}{ResNet50 on CIFAR-100}  \\ 
+					& ResNet-20 on CIFAR-10 & ResNet-50 on CIFAR-10 & \multicolumn{1}{l}{ResNet-50 on CIFAR-100}  \\ 
 					\cmidrule{2-4}
 					Sparsity  & Time                 & Time                 & Time                                       \\ 
 					\midrule
@@ -375,9 +410,48 @@
 					0.7 & 8              & 8.8              & 16.6                                    \\
 					\bottomrule
 				\end{tabular}
+				\label{table6}
 			\end{table}
+
+			Tables \ref{table4} and \ref{table5} represents the total time taken for applying \(N:M\) pruning on the CNN models. For increasing number of \(K\), the total pruning time of a model increases, as we need to consider more number of activations ahead. 
+
+			In unstructured pruning, at a fixed \(K\) value, table \ref{table6}
+			shows a decrease in pruning time for higher sparsity levels. This is due to higher number of weights being zero.
+
+
+
+		
+		\newpage
 		\subsection[Qualitative Analysis]{Qualitative Analysis}
-		\subsection[Result]{Result}
+			Each figure compares the classification done by a pre-trained ResNet model and best models obtained through \(N:M\) pruning and unstructured pruning.
+			\begin{figure}[H]
+				\begin{center}
+					\begin{subfigure}[b]{0.4\textwidth}
+						\captionsetup{justification=centering}
+						\includegraphics[scale=0.6]{output1.png}
+						\caption{Comparison of accuracies of original ResNet-20 with pruned versions of ResNet-20, using CIFAR-10}
+					\end{subfigure}
+					\hfill
+					\begin{subfigure}[b]{0.4\textwidth}
+						\captionsetup{justification=centering}
+						\includegraphics[scale=0.6]{output2.png}
+						\caption{Comparison of accuracies of original ResNet-50 with pruned versions of ResNet-50, using CIFAR-10}
+					\end{subfigure}
+				\end{center}
+			\end{figure}
+
+			\begin{figure}[H]
+				\begin{center}
+					\captionsetup{justification=centering}
+					\includegraphics[scale=0.6]{output3.png}
+					\caption{Comparison of accuracies of original ResNet-50 with pruned versions of ResNet-50, using CIFAR-100}
+				\end{center}
+			\end{figure}
+
+			The above results show that the pruned models are also able to correctly classify the input image, performing on par with the pre-trained model.
+	\newpage
+	\chapter[Conclusion]{Conclusion}
+		In this study, we conduct a thorough analysis on some of the modern pruning algorithms applied in deep architectures. Pruning is a crucial technique for optimizing deep neural networks, enabling reduced model size, faster inference, and improved generalization. Various pruning algorithms, such as WideTopo, GETA, and Fine-Pruning, offer different approaches to achieve these goals, each with its own strengths and limitations. The SNOWS algorithm presents a novel approach to pruning by utilizing a Hessian-Free second-order optimization method to adjust remaining weights after pruning, effectively recovering performance without retraining.
 
 	\newpage
 	\printbibliography
